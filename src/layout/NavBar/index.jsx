@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import sungbae_logo from "../../assets/sungbae_logo.svg";
-
 import NavItem from "./Sections/NavItem";
 
-const Navbar = () => {
+const Navbar = ({ toggleChat }) => {
   const userID = "testID";
   const [menu, setMenu] = useState(false);
 
@@ -33,12 +32,12 @@ const Navbar = () => {
 
       {/* big screen nav-items */}
       <div className="hidden sm:block ml-auto">
-        <NavItem userID={userID} />
+        <NavItem userID={userID} toggleChat={toggleChat} />
       </div>
 
       {/* mobile nav-item */}
       <div className={`block sm:hidden ${menu ? "block" : "hidden"} ml-auto`}>
-        <NavItem userID={userID} />
+        <NavItem userID={userID} toggleChat={toggleChat} />
       </div>
     </header>
   );

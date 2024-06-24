@@ -2,12 +2,16 @@ import React from "react";
 import chat from "../../../assets/chat.svg";
 import basic_profile from "../../../assets/basic_profile.svg";
 
-const NavItem = ({ userID }) => {
+const NavItem = ({ userID, toggleChat }) => {
+  const handleChatClick = () => {
+    toggleChat();
+  };
+
   return (
     <div className="flex justify-end space-x-4">
       {/* 채팅 */}
-      <div className="chat">
-        <img src={chat} alt="chat" className="w-8 h-8" />
+      <div className="chat" onClick={handleChatClick}>
+        <img src={chat} alt="chat" className="w-8 h-8 cursor-pointer" />
       </div>
 
       {/* 프로필 사진 */}
@@ -18,8 +22,5 @@ const NavItem = ({ userID }) => {
     </div>
   );
 };
-{
-  /*인선확인용 */
-}
 
 export default NavItem;

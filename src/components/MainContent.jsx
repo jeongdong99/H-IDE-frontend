@@ -69,7 +69,7 @@ export default function MainContent({
 
   return (
     <main
-      className="flex-grow flex flex-col overflow-auto"
+      className="flex-grow flex flex-col overflow-hidden"
       style={{ backgroundColor: "#FAFFF9" }}
     >
       <div className="flex justify-between items-center p-4 border-b border-gray-300">
@@ -91,9 +91,9 @@ export default function MainContent({
           </button>
         </div>
       </div>
-      <div className="flex-grow p-4">
+      <div className="flex-grow">
         <Editor
-          height="100%"
+          height="calc(50vh - 4rem)" // 에디터 높이 설정
           language={file.language}
           value={file.value}
           theme="vs"

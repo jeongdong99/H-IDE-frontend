@@ -1,4 +1,5 @@
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { useState } from "react";
 import "./App.css";
 import LandingPage from "./pages/LandingPage/index";
 import LoginPage from "./pages/LoginPage/index";
@@ -12,7 +13,7 @@ import FindPw from "./pages/FindPw/index";
 import MainPage from "./pages/MainPage/index";
 import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 컴포넌트 가져오기
 
-function Layout() {
+function Layout({ toggleChat }) {
   return (
     <div className="flex flex-col h-screen justify-between">
       <ToastContainer
@@ -21,8 +22,7 @@ function Layout() {
         pauseOnHover
         autoClose={1500}
       />
-
-      <Navbar />
+      <Navbar toggleChat={toggleChat} />
       <main>
         <Outlet />
       </main>
@@ -32,10 +32,18 @@ function Layout() {
 }
 
 function App() {
+  const [isChatOpen, setIsChatOpen] = useState(false); // 채팅창 상태 관리
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const showChat = queryParams.get("showChat") === "true";
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
   return (
-    // 중첩 라우팅
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Layout toggleChat={toggleChat} />}>
         {/* 로그인과 상관없이 갈 수 있는 경로 */}
         <Route index element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -48,7 +56,10 @@ function App() {
           path="/mainPage"
           element={
             <PrivateRoute>
-              <MainPage />
+              <MainPage
+                showChat={isChatOpen || showChat}
+                toggleChat={toggleChat}
+              />
             </PrivateRoute>
           }
         />

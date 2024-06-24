@@ -1,16 +1,14 @@
-// src/pages/MainPage.jsx
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
-import MainContent from "../../components/MainContent";
-import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import MainContent from "../../components/MainContent";
+import ChatDrawer from "../../components/ChatDrawer";
 import "../../index.css";
 import {
   getFilesByProjectId as fetchFilesAPI,
   updateFile as updateFileAPI,
   executeFile as executeFileAPI,
   createFile as createFileAPI,
-  getUserById as UsersIdAPI,
 } from "../../utils/api";
 
 const getFileLanguage = (fileType) => {
@@ -47,12 +45,13 @@ const getFileNameWithExtension = (fileName, fileType) => {
   return `${fileName}.${extensionMap[fileType] || ""}`;
 };
 
-export default function MainPage() {
+export default function MainPage({ showChat, toggleChat }) {
   const [files, setFiles] = useState({});
   const [fileName, setFileName] = useState("");
   const [newFileName, setNewFileName] = useState("");
   const [output, setOutput] = useState("");
   const [usersId, setUsersId] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(showChat); // 채팅창 상태 초기화
 
   // 로컬 스토리지에서 usersId 가져오기
   useEffect(() => {
@@ -169,30 +168,41 @@ export default function MainPage() {
     }
   };
 
+  useEffect(() => {
+    setIsChatOpen(showChat); // showChat prop이 변경될 때 isChatOpen 상태를 업데이트
+  }, [showChat]);
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar
-          usersId={usersId}
-          files={files}
-          setFiles={setFiles}
-          fileName={fileName}
-          setFileName={setFileName}
-          newFileName={newFileName}
-          setNewFileName={setNewFileName}
-          createFileLocal={createFileLocal}
-          deleteFileLocal={deleteFileLocal}
-        />
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <MainContent
-            file={file}
-            files={files}
-            setFiles={setFiles}
-            fileName={fileName}
-            executeCode={executeCode}
-          />
-          <Footer output={output} />
+    <div className="flex min-h-screen">
+      <Sidebar
+        usersId={usersId}
+        files={files}
+        setFiles={setFiles}
+        fileName={fileName}
+        setFileName={setFileName}
+        newFileName={newFileName}
+        setNewFileName={setNewFileName}
+        createFileLocal={createFileLocal}
+        deleteFileLocal={deleteFileLocal}
+      />
+      <div className="flex flex-col flex-1">
+        <div className="flex flex-1 overflow-hidden">
+          <div className={`flex-1 ${isChatOpen ? "w-2/3" : "w-full"} h-full`}>
+            <MainContent
+              file={file}
+              files={files}
+              setFiles={setFiles}
+              fileName={fileName}
+              executeCode={executeCode}
+            />
+          </div>
+          {isChatOpen && (
+            <div className="w-1/3 h-full">
+              <ChatDrawer toggleChat={toggleChat} />
+            </div>
+          )}
         </div>
+        <Footer output={output} />
       </div>
     </div>
   );

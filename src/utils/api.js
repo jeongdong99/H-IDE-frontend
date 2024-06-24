@@ -169,3 +169,23 @@ export const executeFile = async (usersId, fileId) => {
     throw error;
   }
 };
+
+//채팅
+
+// 메시지 검색 API 호출
+export const search = async (content) => {
+  try {
+    // 세션 스토리지에서 토큰 가져오기
+    const token = sessionStorage.getItem("token");
+
+    const response = await axiosInstance.get("/chat/search", {
+      params: { content },
+      headers: {
+        Authorization: `${token}`, // 헤더에 토큰 추가
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`검색 요청 실패: ${error.message}`);
+  }
+};
