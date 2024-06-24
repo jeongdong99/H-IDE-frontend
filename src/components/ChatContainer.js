@@ -1,10 +1,23 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa"; // 화살표 아이콘 import
 import searchIcon from "../assets/search.svg";
 import deleteIcon from "../assets/Vector 25.svg";
 
 function ChatContainer({ UserName, messageList, toggleChat }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [highlightedMessageIndices, setHighlightedMessageIndices] = useState(
+    []
+  );
+  const [currentHighlightedIndex, setCurrentHighlightedIndex] = useState(-1);
   const scrollRef = useRef(null);
+  const lastMessageSenderRef = useRef(null);
+  const navigate = useNavigate();
+
+  // main으로 이동 함수
+  const handleClick = () => {
+    navigate("/board");
+  };
 
   // 검색어 입력 처리 함수
   const handleSearchChange = (event) => {
@@ -19,20 +32,51 @@ function ChatContainer({ UserName, messageList, toggleChat }) {
     }
   };
 
-  // 검색 실행 함수
+  // 검색 실행 함수 (아래에서 위로 검색)
   const performSearch = () => {
-    // 검색어가 변경될 때 실행될 로직
     if (scrollRef.current && searchTerm) {
-      // messageList에서 검색어와 일치하는 첫 번째 메시지의 인덱스를 찾기
-      const index = messageList.findIndex((message) =>
-        message.content.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-      // 인덱스가 유효하면 해당 메시지로 스크롤
-      if (index !== -1) {
-        const messageElement = scrollRef.current.children[index];
-        messageElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      const indices = [];
+      for (let i = messageList.length - 1; i >= 0; i--) {
+        if (
+          messageList[i].content
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        ) {
+          indices.push(i);
+        }
       }
+
+      setHighlightedMessageIndices(indices);
+
+      if (indices.length > 0) {
+        setCurrentHighlightedIndex(0);
+        scrollToMessage(0);
+      }
+    }
+  };
+
+  // 특정 메시지로 스크롤하는 함수
+  const scrollToMessage = (index) => {
+    if (scrollRef.current && highlightedMessageIndices.length > 0) {
+      const messageElement =
+        scrollRef.current.children[highlightedMessageIndices[index]];
+      messageElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentHighlightedIndex > 0) {
+      const newIndex = currentHighlightedIndex - 1;
+      setCurrentHighlightedIndex(newIndex);
+      scrollToMessage(newIndex);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentHighlightedIndex < highlightedMessageIndices.length - 1) {
+      const newIndex = currentHighlightedIndex + 1;
+      setCurrentHighlightedIndex(newIndex);
+      scrollToMessage(newIndex);
     }
   };
 
@@ -45,6 +89,19 @@ function ChatContainer({ UserName, messageList, toggleChat }) {
 
     return `${period} ${hours}:${minutes}`;
   }
+
+  // Scroll to bottom when current user sends a new message
+  useEffect(() => {
+    if (messageList.length > 0) {
+      const lastMessage = messageList[messageList.length - 1];
+      if (lastMessage.user.userId === UserName) {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      }
+      lastMessageSenderRef.current = lastMessage.user.userId;
+    }
+  }, [messageList, UserName]);
 
   return (
     <div>
@@ -87,8 +144,15 @@ function ChatContainer({ UserName, messageList, toggleChat }) {
             <p className="text-gray-400">메시지가 없습니다.</p>
           </div>
         ) : (
-          messageList.map((message, index) =>
-            UserName === message.user.userId ? (
+          messageList.map((message, index) => {
+            const isCurrentUser = UserName === message.user.userId;
+            const isHighlighted =
+              index === highlightedMessageIndices[currentHighlightedIndex];
+            const messageStyle = isHighlighted
+              ? { backgroundColor: "#FFFF99" }
+              : { backgroundColor: "#F5FBF4" };
+
+            return isCurrentUser ? (
               <div key={index} className="flex justify-end">
                 <div
                   className="mr-1 mt-4 text-right"
@@ -98,7 +162,7 @@ function ChatContainer({ UserName, messageList, toggleChat }) {
                 </div>
                 <div
                   className="mb-5 p-1 rounded shadow break-words max-w-1/2"
-                  style={{ width: "max-content", backgroundColor: "#F5FBF4" }}
+                  style={{ width: "max-content", ...messageStyle }}
                 >
                   {message.content}
                 </div>
@@ -113,7 +177,7 @@ function ChatContainer({ UserName, messageList, toggleChat }) {
                     className="mb-5 ml-1 p-1 rounded shadow break-words max-w-1/2"
                     style={{
                       width: "max-content",
-                      backgroundColor: "#F5FBF4",
+                      ...messageStyle,
                       alignSelf: "flex-start",
                     }}
                   >
@@ -127,10 +191,33 @@ function ChatContainer({ UserName, messageList, toggleChat }) {
                   </div>
                 </div>
               </div>
-            )
-          )
+            );
+          })
         )}
       </div>
+
+      {highlightedMessageIndices.length > 0 && (
+        <div className="flex justify-between mt-2">
+          <button
+            type="button"
+            onClick={handlePrev}
+            disabled={currentHighlightedIndex === 0}
+            className="px-4 py-2 border rounded bg-gray-300"
+          >
+            <FaArrowDown />
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={
+              currentHighlightedIndex === highlightedMessageIndices.length - 1
+            }
+            className="px-4 py-2 border rounded bg-gray-300"
+          >
+            <FaArrowUp />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -29,11 +29,14 @@ axiosInstance.interceptors.response.use(
     if (response.config.url === "/login" && response.headers.authorization) {
       const accessToken = response.headers.authorization;
       const usersId = response.headers.usersid;
+      const userId = response.headers.userid;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("usersId", usersId);
+      localStorage.setItem("userId", userId);
 
       console.log("Access Token 저장됨:", accessToken);
+      console.log("usersId 저장됨:", usersId);
       console.log("usersId 저장됨:", usersId);
     }
 

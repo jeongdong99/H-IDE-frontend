@@ -1,13 +1,8 @@
-// Monaco Editor를 사용하여 사용자 정의 테마를 정의하는 함수
 const defineCustomTheme = (monacoInstance) => {
-  console.log("Defining custom theme"); // 로그 추가: 사용자 정의 테마를 정의 중임을 알림
-
-  // 사용자 정의 테마 정의
   monacoInstance.editor.defineTheme("colorBlindFriendlyTheme", {
-    base: "vs", // 기본 테마는 "vs"를 상속받음
-    inherit: true, // 상위 테마의 설정을 상속받음
+    base: "vs",
+    inherit: true,
 
-    // 특정 토큰에 대한 색상 및 스타일 규칙
     rules: [
       { token: "comment", foreground: "#8A2BE2", fontStyle: "italic" }, // 주석: 보라색, 이탤릭
       { token: "keyword", foreground: "#483D8B" }, // 키워드: 다크 슬레이트 블루
@@ -19,7 +14,6 @@ const defineCustomTheme = (monacoInstance) => {
       { token: "variable", foreground: "#9932CC" }, // 변수: 다크 오키드
     ],
 
-    // 에디터 UI 요소의 색상
     colors: {
       "editor.foreground": "#000000", // 텍스트: 검은색
       "editor.background": "#FFFFFF", // 배경: 흰색
