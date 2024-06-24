@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 // import { useHistory } from 'react-router-dom'; // useHistory import
-import { registerUser } from "../../store/thunkFunctions";
+//import { registerUser } from "../../store/thunkFunctions";
 import JOINUS from "../../assets/JOINUS.svg";
 import {
   checkUserid,
   checkNickname,
   signUpUser,
   sendEmailCode,
-} from "../../utils/api"; //api.js 에 작성하신 함수를 여기 import 해주셔야 합니다!
+} from "../../utils/axioss"; //api.js 에 작성하신 함수를 여기 import 해주셔야 합니다!
 
 const RegisterPage = () => {
   const {
@@ -30,7 +30,7 @@ const RegisterPage = () => {
     try {
       //2024.06.24
       //onSubmit에서 registerUser액션을 호출하도록
-      await dispatch(registerUser(data)).unwrap();
+      //await dispatch(registerUser(data)).unwrap();
       const response = await signUpUser(data); // api.js에서 정의한 함수 호출
 
       console.log("회원가입 성공");
