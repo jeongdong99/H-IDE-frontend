@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import insun_hidelogo from "../../assets/insun_hidelogo.svg";
 import { findIdUser } from "../../store/thunkFunctions";
 import JOINUS from "../../assets/JOINUS.svg";
-import { sendEmailCode, findUserid } from "../../utils/api"; //api.js 에 작성하신 함수를 여기 import 해주셔야 합니다!
+import { sendEmailCode, findUserid } from "../../utils/axioss"; //api.js 에 작성하신 함수를 여기 import 해주셔야 합니다!
 
 const FindId = () => {
   const {
