@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import sungbae_logo from "../../assets/sungbae_logo.svg";
 import NavItem from "./Sections/NavItem";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ toggleChat }) => {
   const userID = "testID";
+  const user = useSelector((state) => state.user.userData);
   const [menu, setMenu] = useState(false);
 
   const handleMenu = () => {
@@ -32,7 +34,7 @@ const Navbar = ({ toggleChat }) => {
 
       {/* big screen nav-items */}
       <div className="hidden sm:block ml-auto">
-        <NavItem userID={userID} toggleChat={toggleChat} />
+        <NavItem userID={user.userId} toggleChat={toggleChat} />
       </div>
 
       {/* mobile nav-item */}

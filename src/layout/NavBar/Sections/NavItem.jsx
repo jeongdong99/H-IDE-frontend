@@ -1,6 +1,8 @@
 import React from "react";
 import chat from "../../../assets/chat.svg";
 import basic_profile from "../../../assets/basic_profile.svg";
+import MyPage from "../../../pages/MyPage";
+import { Link } from "react-router-dom";
 
 const NavItem = ({ userID, toggleChat }) => {
   const handleChatClick = () => {
@@ -16,8 +18,12 @@ const NavItem = ({ userID, toggleChat }) => {
 
       {/* 프로필 사진 */}
       <div className="my-page flex items-center space-x-2">
-        <img src={basic_profile} alt="basic_profile" className="w-8 h-8" />
-        <span className="text-black">{userID}</span>
+        <Link to="/mypage">
+          <img src={basic_profile} alt="basic_profile" className="w-8 h-8" />
+        </Link>
+        <Link to="/mypage">
+          <span className="text-black">{userID}</span>
+        </Link>
       </div>
     </div>
   );

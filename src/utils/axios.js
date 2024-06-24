@@ -57,4 +57,67 @@ export const loginUser = async (axiosInstance, loginData) => {
   }
 };
 
+// 사용자 정보 가져오기 API 호출
+export const getUserInfo = async () => {
+  try {
+    const response = await axiosInstance.get("/my-page/1");
+    return response.data; // 서버에서 받은 데이터 반환
+  } catch (error) {
+    throw new Error(`사용자 정보 가져오기 요청 실패: ${error.message}`);
+  }
+};
+
+// 닉네임 업데이트 API 호출
+export const updateNickname = async (nickname) => {
+  try {
+    const response = await axiosInstance.post("/my-page/nickname", nickname, {
+      headers: {
+        "Content-Type": "text/plain", // 텍스트 형식으로 요청
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`닉네임 변경 실패: ${error.message}`);
+  }
+};
+
+// 이메일 업데이트 API 호출
+export const updateEmail = async (data) => {
+  try {
+    const response = await axiosInstance.post(
+      "/my-page/email",
+      {
+        email: data.email,
+        code: data.auth,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json", // json 형식으로 요청
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(`이메일 변경 실패: ${error.message}`);
+  }
+};
+
+// 비밀번호 확인 API 호출
+export const checkPassword = async (password) => {
+  try {
+    const response = await axiosInstance.post("/check-password", password, {
+      headers: {
+        "Content-Type": "text/plain", // 텍스트 형식으로 요청
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    } else {
+      return "비밀번호 확인 중 오류가 발생했습니다.";
+    }
+  }
+};
+
 export default axiosInstance;

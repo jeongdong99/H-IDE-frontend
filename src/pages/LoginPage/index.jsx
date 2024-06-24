@@ -31,12 +31,7 @@ const LoginPage = () => {
       // 로그인 성공 후 리다이렉트 등의 작업 수행
       console.log("로그인 성공");
 
-      const userInfoResponse = await axiosInstance.get("/my-page/1");
-      console.log("getUserInfo 응답:", userInfoResponse.data);
-
       reset();
-
-      console.log("Navigating to /mainPage"); // 여기에 로그 추가
 
       // 리다이렉트 페이지로 이동
       navigate("/mainPage"); // 메인 페이지로 이동

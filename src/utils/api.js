@@ -74,13 +74,48 @@ export const signUpUser = async (userData) => {
   }
 };
 
-// 로그인 API 호출
-export const loginUser = async (loginData) => {
+// 아이디 찾기 API 호출
+export const findUserid = async (userData) => {
   try {
-    const response = await axiosInstance.post("/login", loginData);
-    return response.data;
+    const response = await axios.post(
+      "/find-userid",
+      {
+        username: userData.name,
+        email: userData.email,
+        code: userData.auth,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data; // 서버에서 받은 데이터 반환
   } catch (error) {
-    throw new Error(`로그인 요청 실패: ${error.message}`);
+    throw new Error(`아이디 찾기 요청 실패: ${error.message}`);
+  }
+};
+
+// 비밀번호 찾기 API 호출
+export const findPassword = async (userData) => {
+  try {
+    const response = await axios.post(
+      "/find-password",
+      {
+        username: userData.name,
+        userId: userData.id,
+        email: userData.email,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data; // 서버에서 받은 데이터 반환
+  } catch (error) {
+    throw new Error(`비밀번호 찾기 요청 실패: ${error.message}`);
   }
 };
 
