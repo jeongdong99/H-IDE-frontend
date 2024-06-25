@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axioss = axios.create({
-  baseURL: "https://kb9332ceeaf93a.user-app.krampoline.com:8080", // Replace with your backend base URL
+  baseURL: "http://springboot-backend:8080", // Replace with your backend base URL
   headers: {
     "Content-Type": "application/json",
   },
